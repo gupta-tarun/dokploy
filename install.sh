@@ -271,6 +271,14 @@ install_dokploy() {
         release_tag_env="-e RELEASE_TAG=$VERSION_TAG"
     fi
     
+    # Check if image exists locally
+    if docker image inspect "$DOCKER_IMAGE" >/dev/null 2>&1; then
+        echo "Image $DOCKER_IMAGE found locally, skipping pull."
+    else
+        echo "Image $DOCKER_IMAGE not found locally, attempting to pull..."
+        docker pull "$DOCKER_IMAGE" || echo "Warning: Failed to pull $DOCKER_IMAGE. Will try to continue if it exists locally."
+    fi
+
     docker service create \
       --name dokploy \
       --replicas 1 \
@@ -350,8 +358,13 @@ update_dokploy() {
     
     echo "Updating Dokploy to version: ${VERSION_TAG} using image: ${IMAGE_NAME}"
     
-    # Pull the image
-    docker pull $DOCKER_IMAGE
+    # Check if image exists locally
+    if docker image inspect "$DOCKER_IMAGE" >/dev/null 2>&1; then
+        echo "Image $DOCKER_IMAGE found locally, skipping pull."
+    else
+        echo "Image $DOCKER_IMAGE not found locally, attempting to pull..."
+        docker pull "$DOCKER_IMAGE" || echo "Warning: Failed to pull $DOCKER_IMAGE. Will try to update service with whatever is available."
+    fi
 
     # Update the service
     docker service update --image $DOCKER_IMAGE dokploy

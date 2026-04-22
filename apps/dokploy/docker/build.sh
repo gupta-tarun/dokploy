@@ -24,6 +24,6 @@ echo "Building locally for platform: $PLATFORM"
 
 BUILDER=$(docker buildx create --use)
 
-docker buildx build --platform "$PLATFORM" --pull --rm --load -t "dokploy/dokploy:${TAG}" -f 'Dockerfile' .
+docker buildx build --platform "$PLATFORM" --pull --rm --load -t "guptatarun/dokploy:${TAG}" -f 'Dockerfile' .
 
 docker buildx rm $BUILDER
