@@ -5,9 +5,8 @@ import { db } from "../../db/index";
 import { user as userSchema } from "../../db/schema/user";
 
 export const LICENSE_KEY_URL =
-	// process.env.NODE_ENV === "development"
-	// 	? "http://localhost:4002"
-	"https://licenses-api.dokploy.com";
+	"http://localhost:4002";
+	//"https://licenses-api.dokploy.com";
 
 export const initEnterpriseBackupCronJobs = async () => {
 	scheduleJob("enterprise-check", "0 0 */3 * *", async () => {
