@@ -10,8 +10,20 @@ else
     TAG="$VERSION"
 fi
 
+# Detect host architecture
+ARCH=$(uname -m)
+if [ "$ARCH" == "x86_64" ]; then
+    PLATFORM="linux/amd64"
+elif [ "$ARCH" == "aarch64" ]; then
+    PLATFORM="linux/arm64"
+else
+    PLATFORM="linux/amd64" # Fallback
+fi
+
+echo "Building locally for platform: $PLATFORM"
+
 BUILDER=$(docker buildx create --use)
 
-docker buildx build --platform linux/amd64,linux/arm64 --pull --rm -t "dokploy/dokploy:${TAG}" -f 'Dockerfile' .
+docker buildx build --platform "$PLATFORM" --pull --rm --load -t "dokploy/dokploy:${TAG}" -f 'Dockerfile' .
 
 docker buildx rm $BUILDER
