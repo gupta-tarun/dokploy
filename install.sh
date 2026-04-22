@@ -272,7 +272,7 @@ install_dokploy() {
     fi
     
     # Check if image exists locally
-    if docker image inspect "$DOCKER_IMAGE" >/dev/null 2>&1; then
+    if [[ "$(docker images -q $DOCKER_IMAGE 2> /dev/null)" != "" ]]; then
         echo "Image $DOCKER_IMAGE found locally, skipping pull."
     else
         echo "Image $DOCKER_IMAGE not found locally, attempting to pull..."
