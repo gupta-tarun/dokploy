@@ -21,10 +21,10 @@ detect_version() {
             https://github.com/${repo}/releases/latest 2>/dev/null | \
             sed 's#.*/tag/##')
         
-        # Fallback to latest tag if detection fails
-        if [ -z "$version" ]; then
-            echo "Warning: Could not detect latest version from GitHub, using fallback version latest" >&2
-            version="latest"
+        # Fallback if detection fails or returns a URL (common if no releases exist)
+        if [ -z "$version" ] || [[ "$version" == http* ]]; then
+            echo "Warning: Could not detect a valid version tag from ${repo}. Falling back to 'canary'." >&2
+            version="canary"
         else
             echo "Latest stable version detected: $version" >&2
         fi
